@@ -225,7 +225,7 @@ if __name__ == "__main__":
             # CLI mode
             if len(sys.argv) != 3:
                 print("❌ Error: Invalid number of arguments.")
-                print("Usage: python importcamera.pyw <input_directory> <output_directory>")
+                print(f"Usage: python {current_script_filename} <input_directory> <output_directory>")
                 logging.error("Invalid number of arguments in CLI mode")
                 sys.exit(1)
             else:
