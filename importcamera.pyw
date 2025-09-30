@@ -29,6 +29,11 @@ packagelist = ['tkinter', 'zipfile36']
 for pkg in packagelist:   
     globals()[pkg] = install_and_import(pkg)
 
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+from tkinter.scrolledtext import ScrolledText
+import zipfile
+
 current_script_path = __file__
 current_script_filename = os.path.basename(current_script_path)
 current_script_filename_without_extension = os.path.splitext(current_script_filename)[0]
@@ -242,4 +247,5 @@ if __name__ == "__main__":
         logging.error("Unexpected error in main execution", exc_info=True)
         print(f"❌ Unexpected error: {e}")
         sys.exit(1)
+
 
