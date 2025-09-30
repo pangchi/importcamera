@@ -3,10 +3,31 @@ title = "Camera File Import and Zip by Year-Month"
 import subprocess
 import sys
 import os
+import importlib
 from datetime import datetime
 from io import StringIO
 import threading
 import logging
+
+def install_and_import(package):
+    try:
+        # Try to import the package
+        return importlib.import_module(package)
+    except ImportError:
+        # If import fails, install the package
+        print(f"{package} not found, installing...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+            print(f"Successfully installed {package}")
+            return importlib.import_module(package)
+        except subprocess.CalledProcessError:
+            print(f"Failed to install {package}")
+            return None
+
+# List of packages to ensure are installed
+packagelist = ['tkinter', 'zipfile36']
+for pkg in packagelist:   
+    globals()[pkg] = install_and_import(pkg)
 
 current_script_path = __file__
 current_script_filename = os.path.basename(current_script_path)
@@ -19,35 +40,6 @@ logging.basicConfig(
     filename=f"{current_script_filename_without_extension}.log",
     filemode='w'  # Append mode for log file
 )
-
-# Function to install required packages
-def install(package):
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-        logging.info(f"Successfully installed package: {package}")
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Failed to install package {package}: {e}")
-        raise
-
-packages = ['tkinter', 'zipfile36']
-# Ensure required packages are installed
-try:
-    import tkinter as tk
-    from tkinter import filedialog, messagebox, ttk
-    from tkinter.scrolledtext import ScrolledText
-    import zipfile
-except ImportError:
-    try:
-        for package in packages:
-            install(package)
-    except Exception as e:
-        logging.error("Failed to install required packages.", exc_info=True)
-        print("❌ Error: Failed to install required packages. Please install them manually.")
-        sys.exit(1)
-    import tkinter as tk
-    from tkinter import filedialog, messagebox, ttk
-    from tkinter.scrolledtext import ScrolledText
-    import zipfile
 
 # Custom StringIO class to redirect output to ScrolledText and update progress
 class TextRedirector(StringIO):
@@ -250,3 +242,4 @@ if __name__ == "__main__":
         logging.error("Unexpected error in main execution", exc_info=True)
         print(f"❌ Unexpected error: {e}")
         sys.exit(1)
+
